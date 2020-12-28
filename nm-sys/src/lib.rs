@@ -1688,6 +1688,9 @@ pub const NM_IP_TUNNEL_FLAG_IP6_MIP6_DEV: NMIPTunnelFlags = 8;
 pub const NM_IP_TUNNEL_FLAG_IP6_RCV_DSCP_COPY: NMIPTunnelFlags = 16;
 pub const NM_IP_TUNNEL_FLAG_IP6_USE_ORIG_FWMARK: NMIPTunnelFlags = 32;
 
+pub type NMKeyfileHandlerFlags = c_uint;
+pub const NM_KEYFILE_HANDLER_FLAGS_NONE: NMKeyfileHandlerFlags = 0;
+
 pub type NMManagerReloadFlags = c_uint;
 pub const NM_MANAGER_RELOAD_FLAG_CONF: NMManagerReloadFlags = 1;
 pub const NM_MANAGER_RELOAD_FLAG_DNS_RC: NMManagerReloadFlags = 2;
@@ -2043,6 +2046,11 @@ impl ::std::fmt::Debug for NMIPRoutingRule {
          .finish()
     }
 }
+
+#[repr(C)]
+pub struct _NMKeyfileHandlerData(c_void);
+
+pub type NMKeyfileHandlerData = *mut _NMKeyfileHandlerData;
 
 #[repr(C)]
 pub struct NMLldpNeighbor(c_void);
@@ -3711,6 +3719,20 @@ extern "C" {
     pub fn nm_ip_tunnel_mode_get_type() -> GType;
 
     //=========================================================================
+    // NMKeyfileHandlerType
+    //=========================================================================
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_handler_type_get_type() -> GType;
+
+    //=========================================================================
+    // NMKeyfileWarnSeverity
+    //=========================================================================
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_warn_severity_get_type() -> GType;
+
+    //=========================================================================
     // NMManagerError
     //=========================================================================
     pub fn nm_manager_error_get_type() -> GType;
@@ -3987,6 +4009,13 @@ extern "C" {
     pub fn nm_ip_tunnel_flags_get_type() -> GType;
 
     //=========================================================================
+    // NMKeyfileHandlerFlags
+    //=========================================================================
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_handler_flags_get_type() -> GType;
+
+    //=========================================================================
     // NMManagerReloadFlags
     //=========================================================================
     #[cfg(any(feature = "v1_22", feature = "dox"))]
@@ -4261,6 +4290,19 @@ extern "C" {
     pub fn nm_ip_routing_rule_validate(self_: *const NMIPRoutingRule, error: *mut *mut glib::GError) -> gboolean;
     #[cfg(any(feature = "v1_18", feature = "dox"))]
     pub fn nm_ip_routing_rule_from_string(str: *const c_char, to_string_flags: NMIPRoutingRuleAsStringFlags, extra_args: *mut glib::GHashTable, error: *mut *mut glib::GError) -> *mut NMIPRoutingRule;
+
+    //=========================================================================
+    // NMKeyfileHandlerData
+    //=========================================================================
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_handler_data_fail_with_error(handler_data: *mut NMKeyfileHandlerData, src: *mut glib::GError);
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_handler_data_get_context(handler_data: *const NMKeyfileHandlerData, out_kf_group_name: *mut *const c_char, out_kf_key_name: *mut *const c_char, out_cur_setting: *mut *mut NMSetting, out_cur_property_name: *mut *const c_char);
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_handler_data_warn_get(handler_data: *const NMKeyfileHandlerData, out_message: *mut *const c_char, out_severity: *mut NMKeyfileWarnSeverity);
 
     //=========================================================================
     // NMLldpNeighbor
@@ -6637,6 +6679,12 @@ extern "C" {
     #[cfg(any(feature = "v1_26", feature = "dox"))]
     pub fn nm_ethtool_optname_is_ring(optname: *const c_char) -> gboolean;
     pub fn nm_utils_ap_mode_security_valid(type_: NMUtilsSecurityType, wifi_caps: NMDeviceWifiCapabilities) -> gboolean;
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_read(keyfile: *mut glib::GKeyFile, base_dir: *const c_char, handler_flags: NMKeyfileHandlerFlags, handler: NMKeyfileReadHandler, user_data: *mut c_void, error: *mut *mut glib::GError) -> *mut NMConnection;
+    #[cfg(any(feature = "v1_30", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v1_30")))]
+    pub fn nm_keyfile_write(connection: *mut NMConnection, handler_flags: NMKeyfileHandlerFlags, handler: NMKeyfileWriteHandler, user_data: *mut c_void, error: *mut *mut glib::GError) -> *mut glib::GKeyFile;
     #[cfg(any(feature = "v1_2", feature = "dox"))]
     pub fn nm_utils_bond_mode_int_to_string(mode: c_int) -> *const c_char;
     #[cfg(any(feature = "v1_2", feature = "dox"))]

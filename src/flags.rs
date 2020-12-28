@@ -1633,3 +1633,9 @@ impl SetValue for _80211ApSecurityFlags {
         gobject_sys::g_value_set_flags(value.to_glib_none_mut().0, this.to_glib())
     }
 }
+
+bitflags! {
+    pub struct KeyfileHandlerFlags: u32 {
+        const NONE = 0;
+    }
+}
